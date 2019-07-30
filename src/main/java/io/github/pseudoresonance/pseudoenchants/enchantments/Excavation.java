@@ -63,5 +63,17 @@ public class Excavation extends PseudoEnchantment {
 	public int getAnvilMultiplier() {
 		return 4;
 	}
+	
+	public int getMinEnchantibility(int level) {
+		return (level - 1) * 8 + 15;
+	}
+	
+	public int getMaxEnchantibility(int level) {
+		return getMinEnchantibility(level) + 25;
+	}
+	
+	public int getEnchantmentWeight() {
+		return 4;
+	}
 
 }

@@ -30,6 +30,12 @@ public abstract class PseudoEnchantment extends Enchantment {
 	
 	public abstract int getAnvilMultiplier();
 	
+	public abstract int getMinEnchantibility(int level);
+	
+	public abstract int getMaxEnchantibility(int level);
+	
+	public abstract int getEnchantmentWeight();
+	
 	public static boolean registerEnchantments() {
 		boolean success = true;
 		if (Config.excavation) success = (registerEnchantment(EXCAVATION) == false) ? false : success;

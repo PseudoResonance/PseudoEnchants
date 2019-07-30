@@ -26,7 +26,6 @@ import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
 
 public class EnchantL implements Listener {
@@ -36,9 +35,54 @@ public class EnchantL implements Listener {
 
 	@EventHandler
 	public void onEnchant(EnchantItemEvent e) {
-		for (Entry<Enchantment, Integer> enchSet : e.getEnchantsToAdd().entrySet()) {
-			if (enchSet.getKey() instanceof PseudoEnchantment) {
-				PseudoEnchantment.addLoreEnchantment(e.getItem(), (PseudoEnchantment) enchSet.getKey(), enchSet.getValue());
+		ItemStack is = e.getItem();
+		int cost = e.getExpLevelCost();
+		is = PseudoEnchantment.stripLoreEnchantments(is);
+		int added = e.getEnchantsToAdd().size();
+		double mult = Math.pow(0.75, added);
+		double randa = Math.random();
+		if (randa <= (((cost * Math.pow(0.8, added)) + 1) / 37.0)) {
+			boolean firstRun = true;
+			HashMap<PseudoEnchantment, Integer> possible = new HashMap<PseudoEnchantment, Integer>();
+			for (PseudoEnchantment ench : PseudoEnchantment.getEnchantments()) {
+				if (ench.canEnchantItem(is) && !ench.isTreasure()) {
+					for (int i = 1; i <= ench.getMaxLevel(); i++) {
+						int min = ench.getMinEnchantibility(i);
+						if (cost >= min) {
+							int max = ench.getMaxEnchantibility(i);
+							if (cost <= max) {
+								possible.put(ench, i);
+							}
+						}
+					}
+				}
+			}
+			cost *= mult;
+			if (possible.isEmpty())
+				return;
+			while (true) {
+				if (firstRun || Math.random() <= ((cost + 1) / 50.0)) {
+					if (possible.isEmpty())
+						return;
+					if (firstRun)
+						firstRun = false;
+					int maxWeight = 0;
+					for (PseudoEnchantment ench : possible.keySet()) {
+						maxWeight += ench.getEnchantmentWeight();
+					}
+					double rand = (Math.random() * (maxWeight / 2.0));
+					for (PseudoEnchantment ench : possible.keySet()) {
+						rand -= ench.getEnchantmentWeight();
+						if (rand <= 0) {
+							is.addEnchantment(ench, possible.get(ench));
+							is = PseudoEnchantment.addLoreEnchantment(is, ench, possible.get(ench));
+							possible.remove(ench);
+						}
+					}
+				} else {
+					return;
+				}
+				cost /= 2;
 			}
 		}
 	}
@@ -87,24 +131,24 @@ public class EnchantL implements Listener {
 								} else if (b.getType() == Material.CHIPPED_ANVIL) {
 									b.setType(Material.DAMAGED_ANVIL);
 								} else if (b.getType() == Material.DAMAGED_ANVIL) {
+									aInv.clear();
 									b.setType(Material.AIR);
-									b.getWorld().playSound(b.getLocation(), Sound.BLOCK_ANVIL_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+									b.getWorld().playSound(b.getLocation(), Sound.BLOCK_ANVIL_DESTROY, SoundCategory.BLOCKS, 1.0f, 1.0f);
 									anvilMap.remove(e.getWhoClicked().getName());
 									e.getView().close();
+									return;
 								}
 							}
 						}
 					}
-					p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1.0f, 1.0f);
 					aInv.clear();
-					PseudoEnchants.message.sendPluginMessage(e.getWhoClicked(), "Click: Cost: " + cost + " Result: " + result.getType());
+					p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1.0f, 1.0f);
 					return;
 				}
 				aInv.setItem(2, result);
 				aInv.setRepairCost(0);
 				e.getView().setProperty(Property.REPAIR_COST, 0);
 				e.setResult(Result.DENY);
-				PseudoEnchants.message.sendPluginMessage(e.getWhoClicked(), "Click: Cost: None Result: None");
 			}
 		}
 	}
@@ -112,9 +156,11 @@ public class EnchantL implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		Block b = e.getClickedBlock();
-		if (b.getType() == Material.ANVIL || b.getType() == Material.CHIPPED_ANVIL || b.getType() == Material.DAMAGED_ANVIL) {
-			if (e.useInteractedBlock() != Result.DENY) {
-				anvilMap.put(e.getPlayer().getName(), b);
+		if (b != null) {
+			if (b.getType() == Material.ANVIL || b.getType() == Material.CHIPPED_ANVIL || b.getType() == Material.DAMAGED_ANVIL) {
+				if (e.useInteractedBlock() != Result.DENY) {
+					anvilMap.put(e.getPlayer().getName(), b);
+				}
 			}
 		}
 	}
@@ -158,14 +204,12 @@ public class EnchantL implements Listener {
 				e.setResult(result);
 				inv.setRepairCost(cost);
 				e.getView().setProperty(Property.REPAIR_COST, cost);
-				PseudoEnchants.message.sendPluginMessage(e.getViewers().get(0), "Anvil: Cost: " + cost + " Result: " + result.getType());
 				return;
 			}
 			costMap.remove(e.getViewers().get(0).getName());
 			e.setResult(result);
 			inv.setRepairCost(0);
 			e.getView().setProperty(Property.REPAIR_COST, 0);
-			PseudoEnchants.message.sendPluginMessage(e.getViewers().get(0), "Anvil: Cost: None Result: None");
 		}
 	}
 	
