@@ -150,6 +150,11 @@ public class EnchantL implements Listener {
 				e.getView().setProperty(Property.REPAIR_COST, 0);
 				e.setResult(Result.DENY);
 			}
+		} else if (inv.getType() == InventoryType.GRINDSTONE) {
+			ItemStack is = inv.getItem(2);
+			if (is != null & is.getAmount() > 0) {
+				is = PseudoEnchantment.stripLoreEnchantments(is);
+			}
 		}
 	}
 	
