@@ -1,0 +1,15 @@
+#########################
+# PseudoEnchants Config #
+#########################
+
+# DO NOT CHANGE THIS LINE! YOUR CONFIG WILL BE RESET UPON LOADING IF THIS LINE IS EDITED!
+Version: 1
+
+
+################
+# Enchantments #
+################
+
+# Enable the following enchantments
+# NOTE: The server MUST RESTART in order for changes here to take place!
+Excavation: true

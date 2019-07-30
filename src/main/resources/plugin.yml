@@ -1,0 +1,23 @@
+name: ${project.artifactId}
+author: PseudoResonance
+main: io.github.pseudoresonance.pseudoenchants.PseudoEnchants
+version: ${version}
+description: Adds custom enchantments
+api-version: 1.13
+depend: [PseudoAPI]
+commands:
+  pseudoenchants:
+    description: PseudoEnchants Menu
+permissions:
+  pseudoenchants.reset:
+    description: Allows the player to reset the config
+    default: op
+  pseudoenchants.reload:
+    description: Allows the player to reload the plugin
+    default: op
+  pseudoenchants.*:
+    description: Gives the user all PseudoEnchants permissions
+    default: op
+    children:
+      pseudoenchants.reset: true
+      pseudoenchants.reload: true
