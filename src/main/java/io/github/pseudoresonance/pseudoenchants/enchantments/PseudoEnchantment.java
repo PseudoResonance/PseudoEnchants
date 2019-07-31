@@ -16,6 +16,7 @@ import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 public abstract class PseudoEnchantment extends Enchantment {
 
 	public static final PseudoEnchantment EXCAVATION = new Excavation();
+	public static final PseudoEnchantment BEHEADING = new Beheading();
 
 	private static final String[] numerals = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
 	private static ArrayList<PseudoEnchantment> enchantments = new ArrayList<PseudoEnchantment>();
@@ -39,6 +40,7 @@ public abstract class PseudoEnchantment extends Enchantment {
 	public static boolean registerEnchantments() {
 		boolean success = true;
 		if (Config.excavation) success = (registerEnchantment(EXCAVATION) == false) ? false : success;
+		if (Config.beheading) success = (registerEnchantment(BEHEADING) == false) ? false : success;
 		return success;
 	}
 	
@@ -67,6 +69,28 @@ public abstract class PseudoEnchantment extends Enchantment {
 				lore.addAll(im.getLore());
 			im.setLore(lore);
 			is.setItemMeta(im);
+		}
+		return is;
+	}
+	
+	public static ItemStack stripLoreEnchantment(ItemStack is, PseudoEnchantment ench) {
+		if (is.hasItemMeta()) {
+			ItemMeta im = is.getItemMeta();
+			if (im.hasLore()) {
+				List<String> lore = im.getLore();
+				for (int i = lore.size() - 1; i >= 0; i--) {
+					String s = lore.get(i);
+					if (s.startsWith(colorPrefix)) {
+						String strip = s.substring(2);
+						if (strip.startsWith(ench.getFriendlyName())) {
+							lore.remove(i);
+							break;
+						}
+					}
+				}
+				im.setLore(lore);
+				is.setItemMeta(im);
+			}
 		}
 		return is;
 	}

@@ -13,3 +13,13 @@ Version: 1
 # Enable the following enchantments
 # NOTE: The server MUST RESTART in order for changes here to take place!
 Excavation: true
+Beheading: true
+
+
+#############
+# Beheading #
+#############
+
+# Head drop rate multiplier
+# Multiplies the multiplier by the enchantment level to determine the chance of dropping a head
+BeheadingMultiplier: 0.1

@@ -20,7 +20,7 @@ import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
 public class BlockBreakL implements Listener {
 
 	@EventHandler
-	public void onTeleport(BlockBreakEvent e) {
+	public void onBlockBreak(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		ItemStack is = p.getInventory().getItemInMainHand();
 		if (is.getAmount() > 0) {
@@ -36,7 +36,7 @@ public class BlockBreakL implements Listener {
 								broken = breakUpDown(e.getBlock(), is);
 								if (im.getEnchantLevel(PseudoEnchantment.EXCAVATION) >= 2) {
 									Block down = e.getBlock().getRelative(BlockFace.DOWN);
-									if (down.breakNaturally(is))
+									if (breakBlock(down, is))
 										broken++;
 									broken += breakUpDown(down, is);
 								}
@@ -44,7 +44,7 @@ public class BlockBreakL implements Listener {
 								broken = breakUpDown(e.getBlock(), is);
 								if (im.getEnchantLevel(PseudoEnchantment.EXCAVATION) >= 2) {
 									Block up = e.getBlock().getRelative(BlockFace.UP);
-									if (up.breakNaturally(is))
+									if (breakBlock(up, is))
 										broken++;
 									broken += breakUpDown(up, is);
 								}
@@ -52,7 +52,7 @@ public class BlockBreakL implements Listener {
 								broken = breakNorthSouth(e.getBlock(), is);
 								if (im.getEnchantLevel(PseudoEnchantment.EXCAVATION) >= 2) {
 									Block south = e.getBlock().getRelative(BlockFace.SOUTH);
-									if (south.breakNaturally(is))
+									if (breakBlock(south, is))
 										broken++;
 									broken += breakNorthSouth(south, is);
 								}
@@ -60,7 +60,7 @@ public class BlockBreakL implements Listener {
 								broken = breakNorthSouth(e.getBlock(), is);
 								if (im.getEnchantLevel(PseudoEnchantment.EXCAVATION) >= 2) {
 									Block north = e.getBlock().getRelative(BlockFace.NORTH);
-									if (north.breakNaturally(is))
+									if (breakBlock(north, is))
 										broken++;
 									broken += breakNorthSouth(north, is);
 								}
@@ -68,7 +68,7 @@ public class BlockBreakL implements Listener {
 								broken = breakEastWest(e.getBlock(), is);
 								if (im.getEnchantLevel(PseudoEnchantment.EXCAVATION) >= 2) {
 									Block west = e.getBlock().getRelative(BlockFace.WEST);
-									if (west.breakNaturally(is))
+									if (breakBlock(west, is))
 										broken++;
 									broken += breakEastWest(west, is);
 								}
@@ -76,7 +76,7 @@ public class BlockBreakL implements Listener {
 								broken = breakEastWest(e.getBlock(), is);
 								if (im.getEnchantLevel(PseudoEnchantment.EXCAVATION) >= 2) {
 									Block east = e.getBlock().getRelative(BlockFace.EAST);
-									if (east.breakNaturally(is))
+									if (breakBlock(east, is))
 										broken++;
 									broken += breakEastWest(east, is);
 								}
@@ -106,21 +106,21 @@ public class BlockBreakL implements Listener {
 
 	private static int breakUpDown(Block b, ItemStack is) {
 		int broken = 0;
-		if (b.getRelative(BlockFace.NORTH).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.NORTH), is))
 			broken++;
-		if (b.getRelative(BlockFace.NORTH_EAST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.NORTH_EAST), is))
 			broken++;
-		if (b.getRelative(BlockFace.EAST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.EAST), is))
 			broken++;
-		if (b.getRelative(BlockFace.SOUTH_EAST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.SOUTH_EAST), is))
 			broken++;
-		if (b.getRelative(BlockFace.SOUTH).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.SOUTH), is))
 			broken++;
-		if (b.getRelative(BlockFace.SOUTH_WEST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.SOUTH_WEST), is))
 			broken++;
-		if (b.getRelative(BlockFace.WEST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.WEST), is))
 			broken++;
-		if (b.getRelative(BlockFace.NORTH_WEST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.NORTH_WEST), is))
 			broken++;
 		return broken;
 	}
@@ -128,22 +128,22 @@ public class BlockBreakL implements Listener {
 	private static int breakNorthSouth(Block b, ItemStack is) {
 		int broken = 0;
 		Block up = b.getRelative(BlockFace.UP);
-		if (up.breakNaturally(is))
+		if (breakBlock(up, is))
 			broken++;
-		if (up.getRelative(BlockFace.EAST).breakNaturally(is))
+		if (breakBlock(up.getRelative(BlockFace.EAST), is))
 			broken++;
-		if (up.getRelative(BlockFace.WEST).breakNaturally(is))
+		if (breakBlock(up.getRelative(BlockFace.WEST), is))
 			broken++;
 		Block down = b.getRelative(BlockFace.DOWN);
-		if (down.breakNaturally(is))
+		if (breakBlock(down, is))
 			broken++;
-		if (down.getRelative(BlockFace.EAST).breakNaturally(is))
+		if (breakBlock(down.getRelative(BlockFace.EAST), is))
 			broken++;
-		if (down.getRelative(BlockFace.WEST).breakNaturally(is))
+		if (breakBlock(down.getRelative(BlockFace.WEST), is))
 			broken++;
-		if (b.getRelative(BlockFace.EAST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.EAST), is))
 			broken++;
-		if (b.getRelative(BlockFace.WEST).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.WEST), is))
 			broken++;
 		return broken;
 	}
@@ -151,24 +151,31 @@ public class BlockBreakL implements Listener {
 	private static int breakEastWest(Block b, ItemStack is) {
 		int broken = 0;
 		Block up = b.getRelative(BlockFace.UP);
-		if (up.breakNaturally(is))
+		if (breakBlock(up, is))
 			broken++;
-		if (up.getRelative(BlockFace.NORTH).breakNaturally(is))
+		if (breakBlock(up.getRelative(BlockFace.NORTH), is))
 			broken++;
-		if (up.getRelative(BlockFace.SOUTH).breakNaturally(is))
+		if (breakBlock(up.getRelative(BlockFace.SOUTH), is))
 			broken++;
 		Block down = b.getRelative(BlockFace.DOWN);
-		if (down.breakNaturally(is))
+		if (breakBlock(down, is))
 			broken++;
-		if (down.getRelative(BlockFace.NORTH).breakNaturally(is))
+		if (breakBlock(down.getRelative(BlockFace.NORTH), is))
 			broken++;
-		if (down.getRelative(BlockFace.SOUTH).breakNaturally(is))
+		if (breakBlock(down.getRelative(BlockFace.SOUTH), is))
 			broken++;
-		if (b.getRelative(BlockFace.NORTH).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.NORTH), is))
 			broken++;
-		if (b.getRelative(BlockFace.SOUTH).breakNaturally(is))
+		if (breakBlock(b.getRelative(BlockFace.SOUTH), is))
 			broken++;
 		return broken;
+	}
+	
+	private static boolean breakBlock(Block b, ItemStack is) {
+		if (!b.isEmpty() && !b.isLiquid() && b.getType().getHardness() > 0) {
+			return b.breakNaturally(is);
+		}
+		return false;
 	}
 
 }
