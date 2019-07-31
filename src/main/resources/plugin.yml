@@ -5,6 +5,7 @@ version: ${version}
 description: Adds custom enchantments
 api-version: 1.13
 depend: [PseudoAPI]
+softdepend: [WorldGuard]
 commands:
   pseudoenchants:
     description: PseudoEnchants Menu

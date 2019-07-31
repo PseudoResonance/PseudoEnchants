@@ -30,6 +30,8 @@ public class PseudoEnchants extends PseudoPlugin {
 
 	private static Config config;
 	
+	public static boolean isWorldGuardLoaded = false;
+	
 	public void onLoad() {
 		PseudoUpdater.registerPlugin(this);
 	}
@@ -52,6 +54,10 @@ public class PseudoEnchants extends PseudoPlugin {
 		setCommandDescriptions();
 		registerEnchantments();
 		PseudoAPI.registerConfig(config);
+		DeathL.init();
+		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
+			isWorldGuardLoaded = true;
+		}
 	}
 
 	public static Config getConfigOptions() {
