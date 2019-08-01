@@ -61,7 +61,7 @@ public class Beheading extends PseudoEnchantment {
 	}
 	
 	public int getAnvilMultiplier() {
-		return 2;
+		return 1;
 	}
 	
 	public int getMinEnchantibility(int level) {
