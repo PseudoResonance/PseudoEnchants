@@ -16,7 +16,7 @@ import io.github.pseudoresonance.pseudoenchants.commands.ReloadSC;
 import io.github.pseudoresonance.pseudoenchants.commands.ResetSC;
 import io.github.pseudoresonance.pseudoenchants.completers.PseudoEnchantsTC;
 import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
-import io.github.pseudoresonance.pseudoenchants.listeners.BlockBreakL;
+import io.github.pseudoresonance.pseudoenchants.listeners.BlockL;
 import io.github.pseudoresonance.pseudoenchants.listeners.DeathL;
 import io.github.pseudoresonance.pseudoenchants.listeners.EnchantL;
 
@@ -79,7 +79,7 @@ public class PseudoEnchants extends PseudoPlugin {
 	}
 
 	private void initializeListeners() {
-		getServer().getPluginManager().registerEvents(new BlockBreakL(), this);
+		getServer().getPluginManager().registerEvents(new BlockL(), this);
 		getServer().getPluginManager().registerEvents(new EnchantL(), this);
 		getServer().getPluginManager().registerEvents(new DeathL(), this);
 	}
