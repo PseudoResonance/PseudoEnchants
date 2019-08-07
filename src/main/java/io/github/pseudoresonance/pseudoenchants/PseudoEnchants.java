@@ -93,13 +93,13 @@ public class PseudoEnchants extends PseudoPlugin {
 	}
 	
 	private void registerEnchantments() {
-		message.sendPluginMessage(Bukkit.getServer().getConsoleSender(), "Beginning enchantment registration!");
+		message.sendConsolePluginMessage("Beginning enchantment registration!");
 		setAllowEnchantmentRegistration();
 		boolean success = PseudoEnchantment.registerEnchantments();
 		if (success) {
-			message.sendPluginMessage(Bukkit.getServer().getConsoleSender(), "Successfully completed enchantment registration!");
+			message.sendConsolePluginMessage("Successfully completed enchantment registration!");
 		} else {
-			message.sendPluginError(Bukkit.getServer().getConsoleSender(), Errors.CUSTOM, "Enchantment registration could not be completed successfully! Please check the logs for more information!");
+			message.sendConsolePluginError(Errors.CUSTOM, "Enchantment registration could not be completed successfully! Please check the logs for more information!");
 		}
 	}
 	
@@ -108,9 +108,9 @@ public class PseudoEnchants extends PseudoPlugin {
 			Field acceptingNew = Enchantment.class.getDeclaredField("acceptingNew");
 			acceptingNew.setAccessible(true);
 			acceptingNew.setBoolean(null, true);
-			message.sendPluginMessage(Bukkit.getServer().getConsoleSender(), "Set Bukkit to accept new enchantments!");
+			message.sendConsolePluginMessage("Set Bukkit to accept new enchantments!");
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			message.sendPluginError(Bukkit.getServer().getConsoleSender(), Errors.CUSTOM, "Could not set Bukkit to allow new enchantments!");
+			message.sendConsolePluginError(Errors.CUSTOM, "Could not set Bukkit to allow new enchantments!");
 			e.printStackTrace();
 		}
 	}

@@ -41,7 +41,7 @@ public class EnchantL implements Listener {
 		int added = e.getEnchantsToAdd().size();
 		double mult = Math.pow(0.75, added);
 		double randa = Math.random();
-		if (randa <= (((cost * Math.pow(0.8, added)) + 1) / 37.0)) {
+		if (randa <= (((cost * Math.pow(0.8, added)) + 1) / 39.0)) {
 			boolean firstRun = true;
 			HashMap<PseudoEnchantment, Integer> possible = new HashMap<PseudoEnchantment, Integer>();
 			for (PseudoEnchantment ench : PseudoEnchantment.getEnchantments()) {

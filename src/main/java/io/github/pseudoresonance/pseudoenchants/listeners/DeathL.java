@@ -15,8 +15,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import io.github.pseudoresonance.pseudoapi.bukkit.utils.HeadUtils;
 import io.github.pseudoresonance.pseudoenchants.Config;
-import io.github.pseudoresonance.pseudoenchants.HeadAPI;
 import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
 
 public class DeathL implements Listener {
@@ -116,7 +116,7 @@ public class DeathL implements Listener {
 							} else {
 								if (entityMap.containsKey(target.getType())) {
 									SimpleEntry<String, String> entry = entityMap.get(target.getType());
-									head = HeadAPI.getHeadWithBase64(entry.getKey(), entry.getValue());
+									head = HeadUtils.getHeadWithBase64(entry.getKey(), entry.getValue());
 								}
 							}
 							if (head != null) {

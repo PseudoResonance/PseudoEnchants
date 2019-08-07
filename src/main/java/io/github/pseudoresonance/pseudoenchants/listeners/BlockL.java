@@ -28,8 +28,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
+import io.github.pseudoresonance.pseudoapi.bukkit.utils.HeadUtils;
 import io.github.pseudoresonance.pseudoenchants.Config;
-import io.github.pseudoresonance.pseudoenchants.HeadAPI;
 import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
 
@@ -77,10 +77,10 @@ public class BlockL implements Listener {
 					if (uuid == null) {
 						String base64 = skull.getPersistentDataContainer().get(new NamespacedKey(PseudoEnchants.plugin, "Base64"), PersistentDataType.STRING);
 						if (base64 != null) {
-							drop = HeadAPI.getHeadWithBase64(base64, name);
+							drop = HeadUtils.getHeadWithBase64(base64, name);
 						}
 					} else {
-						drop = HeadAPI.getHeadWithUUID(UUID.fromString(uuid), name);
+						drop = HeadUtils.getHeadWithUUID(UUID.fromString(uuid), name);
 					}
 					if (drop != null) {
 						b.getWorld().dropItemNaturally(b.getLocation(), drop);
@@ -259,10 +259,10 @@ public class BlockL implements Listener {
 					if (uuid == null) {
 						String base64 = skull.getPersistentDataContainer().get(new NamespacedKey(PseudoEnchants.plugin, "Base64"), PersistentDataType.STRING);
 						if (base64 != null) {
-							drop = HeadAPI.getHeadWithBase64(base64, name);
+							drop = HeadUtils.getHeadWithBase64(base64, name);
 						}
 					} else {
-						drop = HeadAPI.getHeadWithUUID(UUID.fromString(uuid), name);
+						drop = HeadUtils.getHeadWithUUID(UUID.fromString(uuid), name);
 					}
 					if (drop != null) {
 						b.setType(Material.AIR);

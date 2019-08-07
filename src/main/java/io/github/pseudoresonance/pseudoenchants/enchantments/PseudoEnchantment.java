@@ -3,7 +3,6 @@ package io.github.pseudoresonance.pseudoenchants.enchantments;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -46,11 +45,12 @@ public abstract class PseudoEnchantment extends Enchantment {
 	
 	private static boolean registerEnchantment(PseudoEnchantment ench) {
 		try {
-			PseudoEnchants.message.sendPluginMessage(Bukkit.getServer().getConsoleSender(), "Registering " + ench.getKey());
+			PseudoEnchants.message.sendConsolePluginMessage("Registering " + ench.getKey());
 			Enchantment.registerEnchantment(ench);
 			enchantments.add(ench);
 		} catch (IllegalStateException | IllegalArgumentException e) {
-			PseudoEnchants.message.sendPluginError(Bukkit.getServer().getConsoleSender(), Errors.CUSTOM, "Could not register " + ench.getKey() + "!");
+			PseudoEnchants.message.sendConsolePluginError(Errors.CUSTOM, "Could not register " + ench.getKey() + "!");
+			e.printStackTrace();
 			return false;
 		}
 		return true;
