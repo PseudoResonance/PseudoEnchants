@@ -1,5 +1,8 @@
 package io.github.pseudoresonance.pseudoenchants.listeners;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import org.bukkit.FluidCollisionMode;
@@ -20,13 +23,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.RayTraceResult;
 
-import com.sk89q.worldedit.util.Location;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
-
+import io.github.pseudoresonance.pseudoapi.bukkit.Chat.Errors;
+import io.github.pseudoresonance.pseudoapi.bukkit.language.LanguageManager;
 import io.github.pseudoresonance.pseudoapi.bukkit.PseudoAPI;
 import io.github.pseudoresonance.pseudoapi.bukkit.utils.HeadUtils;
 import io.github.pseudoresonance.pseudoenchants.Config;
@@ -34,6 +32,28 @@ import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
 
 public class BlockL implements Listener {
+
+	private static boolean setup = false;
+	private static Class<?> worldGuardPlugin = null;
+	private static Object worldGuardPluginObj = null;
+	private static Method wrapPlayer = null;
+	private static Class<?> localPlayer = null;
+	private static Method getWorld = null;
+	private static Class<?> location = null;
+	private static Constructor<?> locationConst = null;
+	private static Class<?> world = null;
+	private static Class<?> worldGuard = null;
+	private static Object worldGuardObj = null;
+	private static Method getPlatform = null;
+	private static Class<?> worldGuardPlatform = null;
+	private static Method getRegionContainer = null;
+	private static Class<?> regionContainer = null;
+	private static Method createQuery = null;
+	private static Class<?> regionQuery = null;
+	private static Method getSessionManager = null;
+	private static Class<?> sessionManager = null;
+	private static Method hasBypass = null;
+	private static Method testBuild = null;
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
@@ -189,15 +209,57 @@ public class BlockL implements Listener {
 			broken++;
 		return broken;
 	}
-	
+
 	private static boolean breakBlock(Block b, ItemStack is, Player p) {
 		if (!b.isEmpty() && !b.isLiquid() && b.getType().getHardness() > 0) {
 			if (PseudoEnchants.isWorldGuardLoaded) {
-				LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(p);
-				Location loc = new Location(lp.getWorld(), b.getX(), b.getY(), b.getZ());
-				RegionContainer cont = WorldGuard.getInstance().getPlatform().getRegionContainer();
-				RegionQuery query = cont.createQuery();
-				if (!WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(lp, lp.getWorld()) && !query.testBuild(loc, lp)) {
+				try {
+					if (!setup) {
+						worldGuardPlugin = Class.forName("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
+						Method worldGuardPluginInst = worldGuardPlugin.getMethod("inst");
+						worldGuardPluginInst.setAccessible(true);
+						worldGuardPluginObj = worldGuardPluginInst.invoke(null);
+						wrapPlayer = worldGuardPluginObj.getClass().getDeclaredMethod("wrapPlayer", Player.class);
+						wrapPlayer.setAccessible(true);
+						localPlayer = Class.forName("com.sk89q.worldguard.LocalPlayer");
+						getWorld = localPlayer.getMethod("getWorld");
+						getWorld.setAccessible(true);
+						location = Class.forName("com.sk89q.worldedit.util.Location");
+						world = Class.forName("com.sk89q.worldedit.world.World");
+						locationConst = location.getConstructor(world, int.class, int.class, int.class);
+						worldGuard = Class.forName("com.sk89q.worldguard.WorldGuard");
+						Method worldGuardInstance = worldGuard.getMethod("getInstance");
+						worldGuardInstance.setAccessible(true);
+						worldGuardObj = worldGuardInstance.invoke(null);
+						getPlatform = worldGuardObj.getClass().getMethod("getPlatform");
+						getPlatform.setAccessible(true);
+						worldGuardPlatform = Class.forName("com.sk89q.worldguard.internal.platform.WorldGuardPlatform");
+						getRegionContainer = worldGuardPlatform.getMethod("getRegionContainer");
+						getRegionContainer.setAccessible(true);
+						regionContainer = Class.forName("com.sk89q.worldguard.protection.regions.RegionContainer");
+						createQuery = regionContainer.getMethod("createQuery");
+						createQuery.setAccessible(true);
+						regionQuery = Class.forName("com.sk89q.worldguard.protection.regions.RegionQuery");
+						getSessionManager = worldGuardPlatform.getMethod("getSessionManager");
+						getSessionManager.setAccessible(true);
+						sessionManager = Class.forName("com.sk89q.worldguard.session.SessionManager");
+						hasBypass = sessionManager.getMethod("hasBypass", localPlayer, world);
+						testBuild = regionQuery.getMethod("testBuild", location, localPlayer);
+						setup = true;
+					}
+					Object lp = wrapPlayer.invoke(worldGuardPluginObj, p);
+					Object world = getWorld.invoke(lp);
+					Object loc = locationConst.newInstance(world, b.getX(), b.getY(), b.getZ());
+					Object platform = getPlatform.invoke(worldGuardObj);
+					Object cont = getRegionContainer.invoke(platform);
+					Object query = createQuery.invoke(cont);
+					Object sessionManagerObj = getSessionManager.invoke(platform);
+					if (!((boolean) hasBypass.invoke(sessionManagerObj, lp, world)) && !((boolean) testBuild.invoke(query, loc, lp))) {
+						return false;
+					}
+				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+					PseudoEnchants.plugin.getChat().sendPluginError(p, Errors.CUSTOM, LanguageManager.getLanguage(p).getMessage("error_checking_permissions"));
+					e.printStackTrace();
 					return false;
 				}
 			}

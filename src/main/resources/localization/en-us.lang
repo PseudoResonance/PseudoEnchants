@@ -14,3 +14,4 @@ pseudoenchants:
   error_completed_registration: "Enchantment registration could not be completed successfully! Please check the logs for more information!"
   accepting_new: "Set Bukkit to accept new enchantments!"
   error_accepting_new: "Could not set Bukkit to accept new enchantments!"
+  error_checking_permissions: "Could not check build permissions!"
