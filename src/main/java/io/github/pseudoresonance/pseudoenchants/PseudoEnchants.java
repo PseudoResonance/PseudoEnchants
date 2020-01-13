@@ -1,18 +1,22 @@
 package io.github.pseudoresonance.pseudoenchants;
 
 import java.lang.reflect.Field;
+
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 
+import io.github.pseudoresonance.pseudoapi.bukkit.Chat.Errors;
+import io.github.pseudoresonance.pseudoapi.bukkit.language.LanguageManager;
 import io.github.pseudoresonance.pseudoapi.bukkit.CommandDescription;
 import io.github.pseudoresonance.pseudoapi.bukkit.HelpSC;
 import io.github.pseudoresonance.pseudoapi.bukkit.MainCommand;
-import io.github.pseudoresonance.pseudoapi.bukkit.Message;
-import io.github.pseudoresonance.pseudoapi.bukkit.Message.Errors;
 import io.github.pseudoresonance.pseudoapi.bukkit.PseudoAPI;
 import io.github.pseudoresonance.pseudoapi.bukkit.PseudoPlugin;
 import io.github.pseudoresonance.pseudoapi.bukkit.PseudoUpdater;
+import io.github.pseudoresonance.pseudoenchants.commands.ReloadLocalizationSC;
 import io.github.pseudoresonance.pseudoenchants.commands.ReloadSC;
+import io.github.pseudoresonance.pseudoenchants.commands.ResetLocalizationSC;
 import io.github.pseudoresonance.pseudoenchants.commands.ResetSC;
 import io.github.pseudoresonance.pseudoenchants.completers.PseudoEnchantsTC;
 import io.github.pseudoresonance.pseudoenchants.enchantments.PseudoEnchantment;
@@ -22,8 +26,7 @@ import io.github.pseudoresonance.pseudoenchants.listeners.EnchantL;
 
 public class PseudoEnchants extends PseudoPlugin {
 
-	public static PseudoPlugin plugin;
-	public static Message message;
+	public static PseudoEnchants plugin;
 
 	private static MainCommand mainCommand;
 	private static HelpSC helpSubCommand;
@@ -31,6 +34,9 @@ public class PseudoEnchants extends PseudoPlugin {
 	private static Config config;
 	
 	public static boolean isWorldGuardLoaded = false;
+	
+	@SuppressWarnings("unused")
+	private static Metrics metrics = null;
 	
 	public void onLoad() {
 		PseudoUpdater.registerPlugin(this);
@@ -44,7 +50,6 @@ public class PseudoEnchants extends PseudoPlugin {
 		config.updateConfig();
 		config.firstInit();
 		config.reloadConfig();
-		message = new Message(this);
 		mainCommand = new MainCommand(plugin);
 		helpSubCommand = new HelpSC(plugin);
 		initializeCommands();
@@ -58,6 +63,15 @@ public class PseudoEnchants extends PseudoPlugin {
 		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
 			isWorldGuardLoaded = true;
 		}
+		initializeMetrics();
+	}
+
+	public void onDisable() {
+		super.onDisable();
+	}
+	
+	private void initializeMetrics() {
+		metrics = new Metrics(this);
 	}
 
 	public static Config getConfigOptions() {
@@ -71,7 +85,9 @@ public class PseudoEnchants extends PseudoPlugin {
 	private void initializeSubCommands() {
 		subCommands.put("help", helpSubCommand);
 		subCommands.put("reload", new ReloadSC());
+		subCommands.put("reloadlocalization", new ReloadLocalizationSC());
 		subCommands.put("reset", new ResetSC());
+		subCommands.put("resetlocalization", new ResetLocalizationSC());
 	}
 
 	private void initializeTabcompleters() {
@@ -85,32 +101,33 @@ public class PseudoEnchants extends PseudoPlugin {
 	}
 
 	private void setCommandDescriptions() {
-		commandDescriptions.add(new CommandDescription("pseudoenchants", "Shows PseudoEnchants information", ""));
-		commandDescriptions.add(new CommandDescription("pseudoenchants help", "Shows PseudoEnchants commands", ""));
-		commandDescriptions.add(new CommandDescription("pseudoenchants reload", "Reloads PseudoEnchants config", "pseudoenchants.reload"));
-		commandDescriptions.add(new CommandDescription("pseudoenchants reset", "Resets PseudoEnchants config", "pseudoenchants.reset"));
-		commandDescriptions.add(new CommandDescription("enchant <enchantment> <level>", "Enchants an item", "pseudoenchants.enchant", false));
+		commandDescriptions.add(new CommandDescription("pseudoenchants", "pseudoenchants.pseudoenchants_help", ""));
+		commandDescriptions.add(new CommandDescription("pseudoenchants help", "pseudoenchants.pseudoenchants_help_help", ""));
+		commandDescriptions.add(new CommandDescription("pseudoenchants reload", "pseudoenchants.pseudoenchants_reload_help", "pseudoenchants.reload"));
+		commandDescriptions.add(new CommandDescription("pseudoutils reload", "pseudoenchants.pseudoenchants_reloadlocalization_help", "pseudoenchants.reloadlocalization"));
+		commandDescriptions.add(new CommandDescription("pseudoenchants reset", "pseudoenchants.pseudoenchants_reset_help", "pseudoenchants.reset"));
+		commandDescriptions.add(new CommandDescription("pseudoutils reset", "pseudoenchants.pseudoenchants_resetlocalization_help", "pseudoenchants.resetlocalization"));
 	}
 	
 	private void registerEnchantments() {
-		message.sendConsolePluginMessage("Beginning enchantment registration!");
+		getChat().sendConsolePluginMessage(LanguageManager.getLanguage().getMessage("pseudoenchants.beginning_registration"));
 		setAllowEnchantmentRegistration();
 		boolean success = PseudoEnchantment.registerEnchantments();
 		if (success) {
-			message.sendConsolePluginMessage("Successfully completed enchantment registration!");
+			getChat().sendConsolePluginMessage(LanguageManager.getLanguage().getMessage("pseudoenchants.completed_registration"));
 		} else {
-			message.sendConsolePluginError(Errors.CUSTOM, "Enchantment registration could not be completed successfully! Please check the logs for more information!");
+			getChat().sendConsolePluginError(Errors.CUSTOM, LanguageManager.getLanguage().getMessage("pseudoenchants.error_completed_registration"));
 		}
 	}
 	
-	private static void setAllowEnchantmentRegistration() {
+	private void setAllowEnchantmentRegistration() {
 		try {
 			Field acceptingNew = Enchantment.class.getDeclaredField("acceptingNew");
 			acceptingNew.setAccessible(true);
 			acceptingNew.setBoolean(null, true);
-			message.sendConsolePluginMessage("Set Bukkit to accept new enchantments!");
+			getChat().sendConsolePluginMessage(LanguageManager.getLanguage().getMessage("pseudoenchants.accepting_new"));
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			message.sendConsolePluginError(Errors.CUSTOM, "Could not set Bukkit to allow new enchantments!");
+			getChat().sendConsolePluginError(Errors.CUSTOM, LanguageManager.getLanguage().getMessage("pseudoenchants.error_accepting_new"));
 			e.printStackTrace();
 		}
 	}

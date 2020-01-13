@@ -16,8 +16,14 @@ public class PseudoEnchantsTC implements TabCompleter {
 			if (sender.hasPermission("pseudoenchants.reload")) {
 				possible.add("reload");
 			}
+			if (sender.hasPermission("pseudoenchants.reloadlocalization")) {
+				possible.add("reloadlocalization");
+			}
 			if (sender.hasPermission("pseudoenchants.reset")) {
 				possible.add("reset");
+			}
+			if (sender.hasPermission("pseudoenchants.resetlocalization")) {
+				possible.add("resetlocalization");
 			}
 			if (args[0].equalsIgnoreCase("")) {
 				return possible;

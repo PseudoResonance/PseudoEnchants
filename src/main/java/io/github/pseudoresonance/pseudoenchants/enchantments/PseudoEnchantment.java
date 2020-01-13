@@ -8,7 +8,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.github.pseudoresonance.pseudoapi.bukkit.Message.Errors;
+import io.github.pseudoresonance.pseudoapi.bukkit.Chat.Errors;
+import io.github.pseudoresonance.pseudoapi.bukkit.language.LanguageManager;
 import io.github.pseudoresonance.pseudoenchants.Config;
 import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 
@@ -45,11 +46,11 @@ public abstract class PseudoEnchantment extends Enchantment {
 	
 	private static boolean registerEnchantment(PseudoEnchantment ench) {
 		try {
-			PseudoEnchants.message.sendConsolePluginMessage("Registering " + ench.getKey());
+			PseudoEnchants.plugin.getChat().sendConsolePluginMessage(LanguageManager.getLanguage().getMessage("pseudoenchants.registering", ench.getKey()));
 			Enchantment.registerEnchantment(ench);
 			enchantments.add(ench);
 		} catch (IllegalStateException | IllegalArgumentException e) {
-			PseudoEnchants.message.sendConsolePluginError(Errors.CUSTOM, "Could not register " + ench.getKey() + "!");
+			PseudoEnchants.plugin.getChat().sendConsolePluginError(Errors.CUSTOM, LanguageManager.getLanguage().getMessage("pseudoenchants.error_registering", ench.getKey()));
 			e.printStackTrace();
 			return false;
 		}

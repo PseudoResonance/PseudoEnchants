@@ -25,6 +25,7 @@ public class DeathL implements Listener {
 	
 	public static void init() {
 		entityMap.put(EntityType.BAT, new SimpleEntry<String, String>("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWU5OWRlZWY5MTlkYjY2YWMyYmQyOGQ2MzAyNzU2Y2NkNTdjN2Y4YjEyYjlkY2E4ZjQxYzNlMGEwNGFjMWNjIn19fQ==", "§eBat Head"));
+		entityMap.put(EntityType.BEE, new SimpleEntry<String, String>("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTQ3MzIyZjgzMWUzYzE2OGNmYmQzZTI4ZmU5MjUxNDRiMjYxZTc5ZWIzOWM3NzEzNDlmYWM1NWE4MTI2NDczIn19fQ==", "§eBee Head"));
 		entityMap.put(EntityType.BLAZE, new SimpleEntry<String, String>("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA2ZTM0MmY5MGVjNTM4YWFhMTU1MmIyMjRmMjY0YTA0MDg0MDkwMmUxMjZkOTFlY2U2MTM5YWE1YjNjN2NjMyJ9fX0=", "§eBlaze Head"));
 		entityMap.put(EntityType.CAT, new SimpleEntry<String, String>("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVjOTVjMWYyYTUwYjM3ZDYxMjZmNzZlNDYxOGE0Y2M3OTI3OWE4Yzg0NDM3MjA1NGRjM2IyMmVhMWNlMjcifX19", "§eCat Head"));
 		entityMap.put(EntityType.CAVE_SPIDER, new SimpleEntry<String, String>("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzdiMDcwNjNhNjg3NGZhM2UyMjU0OGUwMjA2MmJkNzMzYzI1ODg1OTI5ODA5NjI0MTgwYWViYjg1MTU1N2Y2YSJ9fX0=", "§eCave Spider Head"));

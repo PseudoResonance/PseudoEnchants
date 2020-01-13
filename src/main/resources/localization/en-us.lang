@@ -1,0 +1,16 @@
+# en-us lang file
+
+pseudoenchants:
+  pseudoenchants_help: "Shows PseudoEnchants information"
+  pseudoenchants_help_help: "Shows PseudoEnchants commands"
+  pseudoenchants_reload_help: "Reloads PseudoEnchants config"
+  pseudoenchants_reloadlocalization_help: "Reloads PseudoEnchants localization"
+  pseudoenchants_reset_help: "Resets PseudoEnchants config"
+  pseudoenchants_resetlocalization_help: "Resets PseudoEnchants localization"
+  registering: "Registering {$1$}"
+  error_registering: "Could not register {$1$}"
+  beginning_registration: "Beginning enchantment registration!"
+  completed_registration: "Successfully completed enchantment registration!"
+  error_completed_registration: "Enchantment registration could not be completed successfully! Please check the logs for more information!"
+  accepting_new: "Set Bukkit to accept new enchantments!"
+  error_accepting_new: "Could not set Bukkit to accept new enchantments!"
