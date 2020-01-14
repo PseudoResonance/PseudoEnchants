@@ -10,15 +10,25 @@ commands:
   pseudoenchants:
     description: PseudoEnchants Menu
 permissions:
-  pseudoenchants.reset:
-    description: Allows the player to reset the config
-    default: op
   pseudoenchants.reload:
     description: Allows the player to reload the plugin
     default: op
+  pseudoenchants.reset:
+    description: Allows the player to reset the config
+    default: op
+    children:
+      pseudoenchants.reload: true
+  pseudoenchants.reloadlocalization:
+    description: Allows the player to reload the localization
+    default: op
+  pseudoenchants.resetlocalization:
+    description: Allows the player to reset the localization
+    default: op
+    children:
+      pseudoenchants.reloadlocalization: true
   pseudoenchants.*:
     description: Gives the user all PseudoEnchants permissions
     default: op
     children:
       pseudoenchants.reset: true
-      pseudoenchants.reload: true
+      pseudoenchants.resetlocalization: true
