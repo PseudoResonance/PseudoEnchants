@@ -12,7 +12,7 @@ import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 public class ReloadSC implements SubCommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player) || sender.hasPermission("pseudoapi.reload")) {
+		if (!(sender instanceof Player) || sender.hasPermission("pseudoenchants.reload")) {
 			try {
 				PseudoEnchants.plugin.reloadConfig();
 			} catch (Exception e) {

@@ -13,7 +13,7 @@ public class ResetLocalizationSC implements SubCommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player) || sender.hasPermission("pseudoutils.resetlocalization")) {
+		if (!(sender instanceof Player) || sender.hasPermission("pseudoenchants.resetlocalization")) {
 			try {
 				LanguageManager.copyDefaultPluginLanguageFiles(PseudoEnchants.plugin, true);
 			} catch (Exception e) {

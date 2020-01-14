@@ -14,7 +14,7 @@ import io.github.pseudoresonance.pseudoenchants.PseudoEnchants;
 public class ResetSC implements SubCommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player) || sender.hasPermission("pseudoapi.reset")) {
+		if (!(sender instanceof Player) || sender.hasPermission("pseudoenchants.reset")) {
 			try {
 				File conf = new File(PseudoEnchants.plugin.getDataFolder(), "config.yml");
 				conf.delete();
