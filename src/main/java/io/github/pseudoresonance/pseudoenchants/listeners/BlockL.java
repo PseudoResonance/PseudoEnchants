@@ -1,5 +1,6 @@
 package io.github.pseudoresonance.pseudoenchants.listeners;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,6 +54,7 @@ public class BlockL implements Listener {
 	private static Class<?> regionQuery = null;
 	private static Method getSessionManager = null;
 	private static Class<?> sessionManager = null;
+	private static Class<?> stateFlag = null;
 	private static Method hasBypass = null;
 	private static Method testBuild = null;
 
@@ -245,6 +247,7 @@ public class BlockL implements Listener {
 						getSessionManager = worldGuardPlatform.getMethod("getSessionManager");
 						getSessionManager.setAccessible(true);
 						sessionManager = Class.forName("com.sk89q.worldguard.session.SessionManager");
+						stateFlag = Class.forName("com.sk89q.worldguard.protection.flags.StateFlag");
 						hasBypass = sessionManager.getMethod("hasBypass", localPlayer, world);
 						for (Method m : regionQuery.getMethods())
 							if (m.getName().equals("testBuild") && m.getParameterTypes()[0] == location && m.getParameterTypes()[1] == localPlayer) {
@@ -260,11 +263,13 @@ public class BlockL implements Listener {
 					Object cont = getRegionContainer.invoke(platform);
 					Object query = createQuery.invoke(cont);
 					Object sessionManagerObj = getSessionManager.invoke(platform);
-					if (!((boolean) hasBypass.invoke(sessionManagerObj, lp, world)) && !((boolean) testBuild.invoke(query, loc, lp))) {
+					boolean bypass = (boolean) hasBypass.invoke(sessionManagerObj, lp, world);
+					boolean build = (boolean) testBuild.invoke(query, loc, lp, Array.newInstance(stateFlag, 0));
+					if (!bypass && !build) {
 						return false;
 					}
 				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-					PseudoEnchants.plugin.getChat().sendPluginError(p, Errors.CUSTOM, LanguageManager.getLanguage(p).getMessage("error_checking_permissions"));
+					PseudoEnchants.plugin.getChat().sendPluginError(p, Errors.CUSTOM, LanguageManager.getLanguage(p).getMessage("pseudoenchants.error_checking_permissions"));
 					e.printStackTrace();
 					return false;
 				}
