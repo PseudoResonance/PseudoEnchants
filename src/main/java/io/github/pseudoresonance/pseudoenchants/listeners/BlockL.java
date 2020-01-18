@@ -41,6 +41,7 @@ public class BlockL implements Listener {
 	private static Method getWorld = null;
 	private static Class<?> location = null;
 	private static Constructor<?> locationConst = null;
+	private static Class<?> extent = null;
 	private static Class<?> world = null;
 	private static Class<?> worldGuard = null;
 	private static Object worldGuardObj = null;
@@ -225,8 +226,9 @@ public class BlockL implements Listener {
 						getWorld = localPlayer.getMethod("getWorld");
 						getWorld.setAccessible(true);
 						location = Class.forName("com.sk89q.worldedit.util.Location");
+						extent = Class.forName("com.sk89q.worldedit.extent.Extent");
 						world = Class.forName("com.sk89q.worldedit.world.World");
-						locationConst = location.getConstructor(world, int.class, int.class, int.class);
+						locationConst = location.getConstructor(extent, double.class, double.class, double.class);
 						worldGuard = Class.forName("com.sk89q.worldguard.WorldGuard");
 						Method worldGuardInstance = worldGuard.getMethod("getInstance");
 						worldGuardInstance.setAccessible(true);
@@ -244,7 +246,11 @@ public class BlockL implements Listener {
 						getSessionManager.setAccessible(true);
 						sessionManager = Class.forName("com.sk89q.worldguard.session.SessionManager");
 						hasBypass = sessionManager.getMethod("hasBypass", localPlayer, world);
-						testBuild = regionQuery.getMethod("testBuild", location, localPlayer);
+						for (Method m : regionQuery.getMethods())
+							if (m.getName().equals("testBuild") && m.getParameterTypes()[0] == location && m.getParameterTypes()[1] == localPlayer) {
+								testBuild = m;
+								break;
+							}
 						setup = true;
 					}
 					Object lp = wrapPlayer.invoke(worldGuardPluginObj, p);
