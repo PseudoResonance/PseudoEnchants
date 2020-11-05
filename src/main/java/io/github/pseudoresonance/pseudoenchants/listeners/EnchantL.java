@@ -61,7 +61,7 @@ public class EnchantL implements Listener {
 			if (possible.isEmpty())
 				return;
 			while (true) {
-				if (firstRun || Math.random() <= ((cost + 1) / 50.0)) {
+				if (firstRun || Math.random() <= ((cost + 1) / 35.0)) {
 					if (possible.isEmpty())
 						return;
 					if (firstRun)

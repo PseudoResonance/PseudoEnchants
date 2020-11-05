@@ -71,7 +71,7 @@ public class PseudoEnchants extends PseudoPlugin {
 	}
 	
 	private void initializeMetrics() {
-		metrics = new Metrics(this);
+		metrics = new Metrics(this, 6257);
 	}
 
 	public static Config getConfigOptions() {

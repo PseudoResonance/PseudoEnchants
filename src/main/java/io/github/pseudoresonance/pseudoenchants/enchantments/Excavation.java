@@ -73,7 +73,7 @@ public class Excavation extends PseudoEnchantment {
 	}
 	
 	public int getEnchantmentWeight() {
-		return 4;
+		return 1;
 	}
 
 }

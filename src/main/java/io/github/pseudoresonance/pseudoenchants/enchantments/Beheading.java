@@ -73,7 +73,7 @@ public class Beheading extends PseudoEnchantment {
 	}
 	
 	public int getEnchantmentWeight() {
-		return 2;
+		return 1;
 	}
 
 }

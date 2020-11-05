@@ -7,7 +7,7 @@
 	<version>${revision}</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<revision>0.3.5</revision>
+		<revision>0.3.6</revision>
 		<lowerName>pseudoenchants</lowerName>
 	</properties>
 	<build>
@@ -156,13 +156,13 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.15.1-R0.1-SNAPSHOT</version>
+			<version>1.16.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.github.pseudoresonance</groupId>
 			<artifactId>PseudoAPI</artifactId>
-			<version>5.1.3</version>
+			<version>5.2.10</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -174,7 +174,7 @@
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>1.5</version>
+			<version>1.7</version>
 		</dependency>
 	</dependencies>
 </project>
